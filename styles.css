@@ -220,7 +220,8 @@ body {
     align-items: center;
     padding: 20px 0;
     position: relative;
-    z-index: 1;
+    z-index: 100;
+    width: 100%;
 }
 
 /* 이동 버튼 스타일 */
@@ -826,7 +827,8 @@ body {
     text-align: center;
     min-height: 100px;
     display: block;
-    clear: none;
+    position: relative;
+    z-index: 1;
 }
 
 /* 문의사항 섹션 스타일 */
@@ -870,4 +872,18 @@ body {
 .contact-link:hover {
     background: #e9ecef;
     transform: translateY(-2px);
+}
+
+/* 이동 버튼 스타일 추가 */
+.move-buttons button {
+    display: inline-block;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0 10px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
