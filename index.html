@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTM-BasketBall Team Maker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 페이지 제목-->
+        <div class="page-title">
+            <h1>농구 팀 빌더</h1>
+            <p>포지션별 선수를 추가하고 팀을 나눠보세요!</p>
+        </div>
+        <!-- 선수 입력 섹션 -->
+        <div class="input-section">
+            <div class="position-inputs-row">
+                <div class="position-input" id="guards">
+                    <h3>가드</h3>
+                    <input type="text" placeholder="가드 이름" tabindex="1">
+                </div>
+                
+                <div class="position-input" id="forwards">
+                    <h3>포워드</h3>
+                    <input type="text" placeholder="포워드 이름" tabindex="2">
+                </div>
+                
+                <div class="position-input" id="centers">
+                    <h3>센터</h3>
+                    <input type="text" placeholder="센터 이름" tabindex="3">
+                </div>
+            </div>
+            <button id="addPlayerBtn" class="add-player-btn">선수 추가</button>
+        </div>
+        <!-- 추가된 선수 목록 제목 -->
+        <h3 class="players-list-title">추가된 선수 목록</h3>
+        <!-- 추가된 선수 목록 -->
+        <div id="addedPlayers">
+            <ul></ul>
+        </div>
+        <!-- 팀 나누기 버튼 섹션 수정 -->
+        <div class="button-group">
+            <button id="divideBtn" class="divide-btn">팀 나누기</button>
+            <button id="shuffleTeamA" class="shuffle-btn">A팀 섞기</button>
+            <button id="shuffleTeamB" class="shuffle-btn">B팀 섞기</button>
+            <button id="resetBtn" class="reset-btn">선수 목록 초기화</button>
+        </div>
+
+        <!-- 팀 컨테이너 -->
+        <div class="teams-container">
+            <!-- A팀 -->
+            <div id="teamA" class="team">
+                <div class="team-header">
+                    <h4>A팀 (0명)</h4>
+                    <div class="position-counts">
+                        <span class="position-count guards">가드: 0명</span>
+                        <span class="position-count forwards">포워드: 0명</span>
+                        <span class="position-count centers">센터: 0명</span>
+                    </div>
+                </div>
+                <div class="team-content">
+                    <div class="team-controls">
+                        <button class="move-up-btn" disabled>▲</button>
+                        <button class="move-down-btn" disabled>▼</button>
+                    </div>
+                    <div class="players-list"></div>
+                </div>
+            </div>
+
+            <!-- 이동 버튼 -->
+            <div class="move-buttons">
+                <button id="moveTeam" class="move-btn">팀 이동</button>
+            </div>
+
+            <!-- B팀 -->
+            <div id="teamB" class="team">
+                <div class="team-header">
+                    <h4>B팀 (0명)</h4>
+                    <div class="position-counts">
+                        <span class="position-count guards">가드: 0명</span>
+                        <span class="position-count forwards">포워드: 0명</span>
+                        <span class="position-count centers">센터: 0명</span>
+                    </div>
+                </div>
+                <div class="team-content">
+                    <div class="team-controls">
+                        <button class="move-up-btn" disabled>▲</button>
+                        <button class="move-down-btn" disabled>▼</button>
+                    </div>
+                    <div class="players-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 저장 및 불러오기 버튼 -->
+        <div class="data-buttons">
+            <button id="saveBtn" class="data-btn">팀 정보 저장</button>
+            <button id="loadBtn" class="data-btn">팀 정보 불러오기</button>
+        </div>
+    </div>
+
+    <script src="teammate.js"></script>
+</body>
+</html>
