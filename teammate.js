@@ -13,6 +13,8 @@ function addPlayers() {
 
     positions.forEach(position => {
         const input = document.querySelector(`#${position} input`);
+        if (!input) return; // 입력 필드가 없으면 건너뛰기
+
         const playerName = input.value.trim();
 
         if (playerName) {
@@ -21,14 +23,17 @@ function addPlayers() {
                 alert(`${playerName}은(는) 이미 추가된 선수입니다.`);
                 return;
             }
+            
+            // 선수 추가
             players[position].push(playerName);
-            input.value = '';
+            input.value = ''; // 입력 필드 초기화
             addedCount++;
         }
     });
 
     if (addedCount > 0) {
         updatePlayerList();
+        console.log('선수가 추가되었습니다:', players); // 디버깅용
     }
 }
 
@@ -523,7 +528,10 @@ function updatePlayerNumbers(teamId) {
 // DOMContentLoaded 이벤트 리스너 수정
 document.addEventListener('DOMContentLoaded', function() {
     // 선수 추가 버튼 이벤트 리스너
-    document.getElementById('addPlayerBtn').addEventListener('click', addPlayers);
+    const addPlayerBtn = document.getElementById('addPlayerBtn');
+    if (addPlayerBtn) {
+        addPlayerBtn.addEventListener('click', addPlayers);
+    }
 
     // 이동 버튼 이벤트 리스너
     document.getElementById('moveTeam').addEventListener('click', movePlayer);
@@ -537,15 +545,17 @@ document.addEventListener('DOMContentLoaded', function() {
         divideBtn.addEventListener('click', divideTeams);
     }
 
-    // 엔터키로 선수 추가
+    // 엔터키 이벤트 리스너 추가
     ['guards', 'forwards', 'centers'].forEach(position => {
         const input = document.querySelector(`#${position} input`);
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addPlayers();
-            }
-        });
+        if (input) {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addPlayers();
+                }
+            });
+        }
     });
 
     // 초기화 버튼 이벤트 리스너
