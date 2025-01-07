@@ -143,6 +143,7 @@ body {
     display: flex;
     gap: 20px;
     margin: 20px 0;
+    flex-wrap: nowrap;
 }
 
 .team {
@@ -218,6 +219,8 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px 0;
+    position: relative;
+    z-index: 1;
 }
 
 /* 이동 버튼 스타일 */
@@ -328,8 +331,6 @@ body {
     }
 
     .move-buttons {
-        flex-direction: row;
-        justify-content: center;
         padding: 10px 0;
     }
 }
@@ -821,10 +822,11 @@ body {
 
 .ad-container {
     width: 100%;
-    margin: 20px 0;
+    margin: 20px auto;
     text-align: center;
     min-height: 100px;
-    clear: both; /* 광고가 레이아웃에 영향을 주지 않도록 */
+    display: block;
+    clear: none;
 }
 
 /* 문의사항 섹션 스타일 */
