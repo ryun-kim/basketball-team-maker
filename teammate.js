@@ -33,7 +33,7 @@ function addPlayers() {
 
     if (addedCount > 0) {
         updatePlayerList();
-        console.log('선수가 추가되었습니다:', players); // 디버깅용
+        //console.log('선수가 추가되었습니다:', players); // 디버깅용
     }
 }
 
@@ -391,6 +391,8 @@ function resetPlayerList() {
 // 이동 버튼 텍스트 업데이트 함수
 function updateMoveButton() {
     const moveBtn = document.getElementById('moveTeam');
+    if (!moveBtn) return; // moveBtn이 없으면 함수 종료
+
     if (!selectedPlayer) {
         moveBtn.textContent = '팀 이동';
         moveBtn.disabled = true;
@@ -527,25 +529,49 @@ function updatePlayerNumbers(teamId) {
 
 // DOMContentLoaded 이벤트 리스너 수정
 document.addEventListener('DOMContentLoaded', function() {
-    // 선수 추가 버튼 이벤트 리스너
+    // 모든 버튼 이벤트 리스너를 안전하게 추가
     const addPlayerBtn = document.getElementById('addPlayerBtn');
     if (addPlayerBtn) {
         addPlayerBtn.addEventListener('click', addPlayers);
     }
 
-    // 이동 버튼 이벤트 리스너
-    document.getElementById('moveTeam').addEventListener('click', movePlayer);
-    
-    // 초기 버튼 상태 설정
-    updateMoveButton();
+    const moveTeamBtn = document.getElementById('moveTeam');
+    if (moveTeamBtn) {
+        moveTeamBtn.addEventListener('click', movePlayer);
+        updateMoveButton();
+    }
 
-    // 팀 나누기 버튼 이벤트 리스너 (ID로 변경)
     const divideBtn = document.getElementById('divideBtn');
-    if (divideBtn) {  // 버튼이 존재할 때만 이벤트 리스너 추가
+    if (divideBtn) {
         divideBtn.addEventListener('click', divideTeams);
     }
 
-    // 엔터키 이벤트 리스너 추가
+    const resetBtn = document.getElementById('resetBtn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', resetPlayerList);
+    }
+
+    const shuffleTeamABtn = document.getElementById('shuffleTeamA');
+    if (shuffleTeamABtn) {
+        shuffleTeamABtn.addEventListener('click', function() {
+            const confirmShuffle = confirm('A팀의 선수 순서를 섞으시겠습니까?');
+            if (confirmShuffle) {
+                shuffleTeam('teamA');
+            }
+        });
+    }
+
+    const shuffleTeamBBtn = document.getElementById('shuffleTeamB');
+    if (shuffleTeamBBtn) {
+        shuffleTeamBBtn.addEventListener('click', function() {
+            const confirmShuffle = confirm('B팀의 선수 순서를 섞으시겠습니까?');
+            if (confirmShuffle) {
+                shuffleTeam('teamB');
+            }
+        });
+    }
+
+    // 입력 필드에 엔터키 이벤트 리스너 추가
     ['guards', 'forwards', 'centers'].forEach(position => {
         const input = document.querySelector(`#${position} input`);
         if (input) {
@@ -558,61 +584,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 초기화 버튼 이벤트 리스너
-    document.getElementById('resetBtn').addEventListener('click', resetPlayerList);
-
-    // A팀 섞기 버튼 이벤트 리스너
-    document.getElementById('shuffleTeamA').addEventListener('click', function() {
-        const confirmShuffle = confirm('A팀의 선수 순서를 섞으시겠습니까?');
-        if (confirmShuffle) {
-            shuffleTeam('teamA');
-        }
-    });
-
-    // B팀 섞기 버튼 이벤트 리스너
-    document.getElementById('shuffleTeamB').addEventListener('click', function() {
-        const confirmShuffle = confirm('B팀의 선수 순서를 섞으시겠습니까?');
-        if (confirmShuffle) {
-            shuffleTeam('teamB');
-        }
-    });
-
-    // 초기 버튼 상태 설정
+    // 초기 상태 설정
     updateShuffleButtons();
     updateMoveButton();
-
-    // movePlayer 함수에 버튼 상태 업데이트 추가
-    const originalMovePlayer = movePlayer;
-    movePlayer = function() {
-        originalMovePlayer.apply(this, arguments);
-        updateShuffleButtons();
-    };
-
-    // 위/아래 이동 버튼 이벤트 리스너 다시 설정
-    function setupMoveButtons() {
-        ['teamA', 'teamB'].forEach(teamId => {
-            const team = document.getElementById(teamId);
-            if (!team) return;
-
-            const upBtn = team.querySelector('.move-up-btn');
-            const downBtn = team.querySelector('.move-down-btn');
-
-            if (upBtn) {
-                upBtn.addEventListener('click', () => movePlayerPosition('up', teamId));
-            }
-            if (downBtn) {
-                downBtn.addEventListener('click', () => movePlayerPosition('down', teamId));
-            }
-        });
-    }
-
-    // 초기 버튼 설정
     setupMoveButtons();
-
-    // divideTeams 함수 실행 후에도 버튼 이벤트 다시 설정
-    const originalDivideTeams = divideTeams;
-    divideTeams = function() {
-        originalDivideTeams.apply(this, arguments);
-        setupMoveButtons();
-    };
 });
+
+// 위/아래 이동 버튼 이벤트 리스너 다시 설정
+function setupMoveButtons() {
+    ['teamA', 'teamB'].forEach(teamId => {
+        const team = document.getElementById(teamId);
+        if (!team) return;
+
+        const upBtn = team.querySelector('.move-up-btn');
+        const downBtn = team.querySelector('.move-down-btn');
+
+        if (upBtn) {
+            upBtn.addEventListener('click', () => movePlayerPosition('up', teamId));
+        }
+        if (downBtn) {
+            downBtn.addEventListener('click', () => movePlayerPosition('down', teamId));
+        }
+    });
+}
+
+// divideTeams 함수 실행 후에도 버튼 이벤트 다시 설정
+const originalDivideTeams = divideTeams;
+divideTeams = function() {
+    originalDivideTeams.apply(this, arguments);
+    setupMoveButtons();
+};
