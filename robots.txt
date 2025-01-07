@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://basketball-team-maker.netlify.app/sitemap.xml 

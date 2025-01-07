@@ -3,11 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="농구 팀 빌더 - 포지션별 선수를 추가하고 팀을 자동으로 나눠보세요">
+    <meta name="keywords" content="농구, 팀 빌더, 팀 나누기, 농구 팀 매칭">
+    <meta name="author" content="당신의 이름">
     <title>BTM-BasketBall Team Maker</title>
     <link rel="stylesheet" href="./styles.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5145868613897653"
+     crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
+        <!-- 상단 광고 -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-5145868613897653"
+                 data-ad-slot="여기에_슬롯ID_입력"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
         <!-- 페이지 제목-->
         <div class="page-title">
             <h1>농구 팀 빌더</h1>
@@ -47,49 +64,86 @@
             <button id="resetBtn" class="reset-btn">선수 목록 초기화</button>
         </div>
 
-        <!-- 팀 컨테이너 -->
-        <div class="teams-container">
-            <!-- A팀 -->
-            <div id="teamA" class="team">
-                <div class="team-header">
-                    <h4>A팀 (0명)</h4>
-                    <div class="position-counts">
-                        <span class="position-count guards">가드: 0명</span>
-                        <span class="position-count forwards">포워드: 0명</span>
-                        <span class="position-count centers">센터: 0명</span>
-                    </div>
-                </div>
-                <div class="team-content">
-                    <div class="team-controls">
-                        <button class="move-up-btn" disabled>▲</button>
-                        <button class="move-down-btn" disabled>▼</button>
-                    </div>
-                    <div class="players-list"></div>
+        <!-- 팀 컨테이너 위 광고 -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                 data-ad-slot="YOUR_AD_SLOT_ID_2"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <!-- A팀 -->
+        <div id="teamA" class="team">
+            <div class="team-header">
+                <h4>A팀 (0명)</h4>
+                <div class="position-counts">
+                    <span class="position-count guards">가드: 0명</span>
+                    <span class="position-count forwards">포워드: 0명</span>
+                    <span class="position-count centers">센터: 0명</span>
                 </div>
             </div>
-
-            <!-- 이동 버튼 -->
-            <div class="move-buttons">
-                <button id="moveTeam" class="move-btn">팀 이동</button>
+            <div class="team-content">
+                <div class="team-controls">
+                    <button class="move-up-btn" disabled>▲</button>
+                    <button class="move-down-btn" disabled>▼</button>
+                </div>
+                <div class="players-list"></div>
             </div>
+        </div>
 
-            <!-- B팀 -->
-            <div id="teamB" class="team">
-                <div class="team-header">
-                    <h4>B팀 (0명)</h4>
-                    <div class="position-counts">
-                        <span class="position-count guards">가드: 0명</span>
-                        <span class="position-count forwards">포워드: 0명</span>
-                        <span class="position-count centers">센터: 0명</span>
-                    </div>
+        <!-- 이동 버튼 -->
+        <div class="move-buttons">
+            <button id="moveTeam" class="move-btn">팀 이동</button>
+        </div>
+
+        <!-- B팀 -->
+        <div id="teamB" class="team">
+            <div class="team-header">
+                <h4>B팀 (0명)</h4>
+                <div class="position-counts">
+                    <span class="position-count guards">가드: 0명</span>
+                    <span class="position-count forwards">포워드: 0명</span>
+                    <span class="position-count centers">센터: 0명</span>
                 </div>
-                <div class="team-content">
-                    <div class="team-controls">
-                        <button class="move-up-btn" disabled>▲</button>
-                        <button class="move-down-btn" disabled>▼</button>
-                    </div>
-                    <div class="players-list"></div>
+            </div>
+            <div class="team-content">
+                <div class="team-controls">
+                    <button class="move-up-btn" disabled>▲</button>
+                    <button class="move-down-btn" disabled>▼</button>
                 </div>
+                <div class="players-list"></div>
+            </div>
+        </div>
+
+        <!-- 하단 광고 -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                 data-ad-slot="YOUR_AD_SLOT_ID_3"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <!-- 하단 광고 위치 이후, data-buttons 위에 추가 -->
+        <div class="contact-section">
+            <h3>문의사항</h3>
+            <p>서비스 이용에 궁금한 점이 있으시다면 언제든 연락주세요.</p>
+            <div class="contact-info">
+                <a href="mailto:kjr6260@gmail.com" class="contact-link">
+                    ✉️ kjr6260@gmail.com
+                </a>
+                <a href="https://github.com/ryun-kim" target="_blank" class="contact-link">
+                    💻 GitHub
+                </a>
             </div>
         </div>
 

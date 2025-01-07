@@ -816,3 +816,53 @@ body {
 .data-btn:active {
     transform: translateY(0);
 }
+
+.ad-container {
+    width: 100%;
+    margin: 20px 0;
+    text-align: center;
+    min-height: 100px;
+}
+
+/* 문의사항 섹션 스타일 */
+.contact-section {
+    text-align: center;
+    padding: 30px 20px;
+    margin: 30px 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.contact-section h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.contact-section p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.contact-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.contact-link:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
