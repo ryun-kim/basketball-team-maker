@@ -21,10 +21,9 @@ body {
 
 .teams-container {
     display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 0;
+    gap: 20px;
     margin: 20px 0;
+    align-items: flex-start;
 }
 
 /* 입력 섹션 스타일 */
@@ -226,12 +225,9 @@ body {
 /* 중간 이동 버튼 영역 수정 */
 .move-buttons {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 60px;
-    min-width: 60px;
-    padding: 0 5px;
+    padding: 0 10px;
 }
 
 /* 이동 버튼 스타일 */
@@ -335,14 +331,30 @@ body {
 
     .teams-container {
         flex-direction: column;
+        align-items: center;
     }
 
     .team {
         width: 100%;
+        max-width: 500px;
     }
 
     .move-buttons {
-        padding: 10px 0;
+        width: 100%;
+        padding: 15px 0;
+        margin: 10px 0;
+    }
+
+    .move-btn {
+        width: 80%; /* 버튼 너비 조정 */
+        max-width: 200px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
 }
 
