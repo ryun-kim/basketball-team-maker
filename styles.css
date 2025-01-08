@@ -838,14 +838,9 @@ body {
     transform: translateY(0);
 }
 
+/* 광고 관련 스타일 제거 */
 .ad-container {
-    width: 100%;
-    margin: 20px auto;
-    text-align: center;
-    min-height: 100px;
-    display: block;
-    position: relative;
-    z-index: 1;
+    display: none;  /* 또는 이 클래스 자체를 삭제 */
 }
 
 /* 문의사항 섹션 스타일 */
