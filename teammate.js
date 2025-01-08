@@ -501,18 +501,26 @@ window.movePlayerPosition = function(direction, teamId) {
     const selectedPlayer = teamElement.querySelector('.selected-player-A, .selected-player-B');
     if (!selectedPlayer) return;
 
-    const players = Array.from(playersList.querySelectorAll('p'));
-    const currentIndex = players.indexOf(selectedPlayer);
-    
+    const allPlayers = Array.from(playersList.querySelectorAll('p'));
+    const currentIndex = allPlayers.indexOf(selectedPlayer);
+
     if (direction === 'up' && currentIndex > 0) {
-        playersList.insertBefore(selectedPlayer, players[currentIndex - 1]);
-    } else if (direction === 'down' && currentIndex < players.length - 1) {
-        playersList.insertBefore(players[currentIndex + 1], selectedPlayer);
+        playersList.insertBefore(selectedPlayer, allPlayers[currentIndex - 1]);
+    } else if (direction === 'down' && currentIndex < allPlayers.length - 1) {
+        const targetPosition = allPlayers[currentIndex + 1].nextElementSibling;
+        playersList.insertBefore(selectedPlayer, targetPosition);
     }
 
-    updatePlayerNumbers(teamId);
+    // 번호 업데이트
+    Array.from(playersList.querySelectorAll('p')).forEach((player, index) => {
+        const numberSpan = player.querySelector('.player-number');
+        if (numberSpan) {
+            numberSpan.textContent = index + 1;
+        }
+    });
+
+    // 버튼 상태 업데이트
     updateMoveButtons(teamId);
-    updateTeamInfo(teamId); // 팀 정보 업데이트 추가
 }
 
 // 선수 위치 이동 후 번호 업데이트 함수 추가
@@ -587,30 +595,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 초기 상태 설정
     updateShuffleButtons();
     updateMoveButton();
-    setupMoveButtons();
 });
 
-// 위/아래 이동 버튼 이벤트 리스너 다시 설정
-function setupMoveButtons() {
-    ['teamA', 'teamB'].forEach(teamId => {
-        const team = document.getElementById(teamId);
-        if (!team) return;
-
-        const upBtn = team.querySelector('.move-up-btn');
-        const downBtn = team.querySelector('.move-down-btn');
-
-        if (upBtn) {
-            upBtn.addEventListener('click', () => movePlayerPosition('up', teamId));
-        }
-        if (downBtn) {
-            downBtn.addEventListener('click', () => movePlayerPosition('down', teamId));
-        }
-    });
-}
-
-// divideTeams 함수 실행 후에도 버튼 이벤트 다시 설정
+// divideTeams 함수에서 setupMoveButtons 호출 제거
 const originalDivideTeams = divideTeams;
 divideTeams = function() {
     originalDivideTeams.apply(this, arguments);
-    setupMoveButtons();
 };

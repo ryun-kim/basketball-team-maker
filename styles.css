@@ -228,8 +228,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 140px;
-    min-width: 140px;
+    width: 180px;
+    min-width: 180px;
     padding: 0 10px;
     align-self: center;
 }
@@ -425,10 +425,11 @@ body {
 /* 버튼 그룹 스타일 */
 .button-group {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 20px 0;
     flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
 }
 
 /* 초기화 버튼 스타일 */
@@ -984,8 +985,8 @@ body {
     }
 
     .move-buttons {
-        width: 160px;
-        min-width: 160px;
+        width: 200px;
+        min-width: 200px;
         padding: 0 10px;
     }
 
@@ -1004,5 +1005,21 @@ body {
 
     .team {
         padding: 20px;
+    }
+}
+
+/* 모바일 화면에서만 적용되는 스타일 */
+@media screen and (max-width: 767px) {
+    .button-group {
+        flex-wrap: nowrap;
+        gap: 5px;
+    }
+
+    .button-group button {
+        flex: 1;
+        min-width: 0;
+        padding: 8px 4px;
+        font-size: 0.85em;
+        white-space: nowrap;
     }
 }
