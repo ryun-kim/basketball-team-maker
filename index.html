@@ -21,6 +21,7 @@
     <meta name="author" content="당신의 이름">
     <title>BTM-BasketBall Team Maker</title>
     <link rel="stylesheet" href="./styles.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5145868613897653" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
@@ -31,7 +32,6 @@
                 data-ad-unit="DAN-9X3xTXD9MRn7UtFE" 
                 data-ad-width="320" 
                 data-ad-height="100"></ins> 
-            <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
         </div>
         <!-- 페이지 제목-->
         <div class="page-title">
@@ -115,7 +115,7 @@
             </div>
         </div>
 
-        <!-- 문의사항 섹� -->
+        <!-- 문의사항 섹션 -->
         <div class="contact-section">
             <h3>문의사항</h3>
             <p>서비스 이용에 궁금한 점이 있으시다면 언제든 연락주세요.</p>
@@ -129,21 +129,32 @@
             </div>
         </div>
 
-        <!-- 하단 광고 - �기를 250x250으로 수정 -->
+        <!-- 하단 광고 -->
         <div class="adfit-bottom">
             <ins class="kakao_ad_area" 
                 style="display:none;" 
                 data-ad-unit="DAN-K9OQb9JD2MYdoQIv" 
                 data-ad-width="250" 
                 data-ad-height="250"></ins> 
-            <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
         </div>
     </div>
 
     <script src="./teammate.js"></script>
     <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        // 카카오 애�핏 스크립트
+        (function() {
+            const adScript = document.createElement('script');
+            adScript.type = 'text/javascript';
+            adScript.src = '//t1.daumcdn.net/kas/static/ba.min.js';
+            adScript.async = true;
+            document.body.appendChild(adScript);
+        })();
+
+        // 구글 광고 �기화
+        window.addEventListener('load', function() {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        });
     </script>
 </body>
 </html>
