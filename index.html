@@ -68,7 +68,9 @@
             <button id="divideBtn" class="divide-btn">팀 나누기</button>
             <button id="shuffleTeamA" class="shuffle-btn">A팀 섞기</button>
             <button id="shuffleTeamB" class="shuffle-btn">B팀 섞기</button>
+            <button id="shuffleTeamC" class="shuffle-btn" style="display: none;">C팀 섞기</button>
             <button id="resetBtn" class="reset-btn">선수 목록 초기화</button>
+            <button id="toggleTeamMode" class="mode-btn">3파전</button>
         </div>
         <!-- 팀 컨테이너 추가 -->
         <div class="teams-container">
@@ -90,10 +92,12 @@
                     <div class="players-list"></div>
                 </div>
             </div>
+            
             <!-- 이동 버튼 -->
             <div class="move-buttons">
                 <button id="moveTeam" class="move-btn">팀 이동</button>
             </div>
+            
             <!-- B팀 -->
             <div id="teamB" class="team">
                 <div class="team-header">
@@ -108,6 +112,30 @@
                     <div class="team-controls">
                         <button class="move-up-btn" disabled>▲</button>
                         <button class="move-down-btn" disabled>▼</button>
+                    </div>
+                    <div class="players-list"></div>
+                </div>
+            </div>
+            
+            <!-- 이동 버튼 -->
+            <div class="move-buttons" id="moveButtons2">
+                <button id="moveTeam2" class="move-btn">팀 이동</button>
+            </div>
+            
+            <!-- C팀 -->
+            <div id="teamC" class="team" style="display: none;">
+                <div class="team-header">
+                    <h4>C팀 (0명)</h4>
+                    <div class="position-counts">
+                        <span class="position-count guards">가드: 0명</span>
+                        <span class="position-count forwards">포워드: 0명</span>
+                        <span class="position-count centers">센터: 0명</span>
+                    </div>
+                </div>
+                <div class="team-content">
+                    <div class="team-controls">
+                        <button class="move-up-btn" onclick="movePlayerPosition('up', 'teamC')" disabled>▲</button>
+                        <button class="move-down-btn" onclick="movePlayerPosition('down', 'teamC')" disabled>▼</button>
                     </div>
                     <div class="players-list"></div>
                 </div>

@@ -5,6 +5,7 @@ let players = {
     centers: []
 };
 let selectedPlayer = null;
+let isThreeTeamMode = false;
 
 // 선수 추가 함수
 function addPlayers() {
@@ -79,25 +80,63 @@ function handlePlayerClick(event) {
     if (!team) return;
 
     // 이전 선택 해제
-    document.querySelectorAll('.selected-player-A, .selected-player-B').forEach(el => {
-        el.classList.remove('selected-player-A', 'selected-player-B');
+    document.querySelectorAll('.selected-player-A, .selected-player-B, .selected-player-C').forEach(el => {
+        el.classList.remove('selected-player-A', 'selected-player-B', 'selected-player-C');
     });
 
     if (selectedPlayer === playerElement) {
         selectedPlayer = null;
     } else {
-        const teamType = team.id === 'teamA' ? 'A' : 'B';
+        const teamType = team.id.replace('team', '');
         playerElement.classList.add(`selected-player-${teamType}`);
         selectedPlayer = playerElement;
     }
 
-    // 버든 버튼 상태 업데이트
+    // 버튼 상태 업데이트
     updateMoveButtons(team.id);
     updateMoveButton();
     updateShuffleButtons();
 }
 
-// 팀 나누기 함수
+// 팀 모드 전환 함수 수정
+function toggleTeamMode() {
+    isThreeTeamMode = !isThreeTeamMode;
+    const teamC = document.getElementById('teamC');
+    const moveButtons2 = document.getElementById('moveButtons2');
+    const shuffleTeamC = document.getElementById('shuffleTeamC');
+    const toggleBtn = document.getElementById('toggleTeamMode');
+    
+    if (isThreeTeamMode) {
+        // 3팀 모드로 전환
+        teamC.style.display = 'block';
+        moveButtons2.style.display = 'flex';
+        shuffleTeamC.style.display = 'inline-block';
+        toggleBtn.textContent = '2파전';
+        // 3팀으로 자동 나누기
+        const totalPlayers = players.guards.length + players.forwards.length + players.centers.length;
+        if (totalPlayers > 0) {
+            divideThreeTeams();
+        }
+    } else {
+        // 2팀 모드로 전환
+        teamC.style.display = 'none';
+        moveButtons2.style.display = 'none';
+        shuffleTeamC.style.display = 'none';
+        toggleBtn.textContent = '3파전';
+        // 2팀으로 자동 나누기
+        const totalPlayers = players.guards.length + players.forwards.length + players.centers.length;
+        if (totalPlayers > 0) {
+            divideTwoTeams();
+        }
+    }
+
+    // 선택된 선수 초기화
+    selectedPlayer = null;
+    updateMoveButton();
+    updateShuffleButtons();
+}
+
+// 팀 나누기 함수 수정
 function divideTeams() {
     // 전체 선수 수 확인
     const totalPlayers = players.guards.length + players.forwards.length + players.centers.length;
@@ -107,124 +146,11 @@ function divideTeams() {
         return;
     }
 
-    // 인원수 차이 체크
-    const teamASize = Math.ceil(totalPlayers / 2);
-    const teamBSize = totalPlayers - teamASize;
-    
-    if (Math.abs(teamASize - teamBSize) > 1) {
-        alert('팀 간의 인원수 차이가 2명 이상이 되지 않도록 선수를 추가해주세요.');
-        return;
+    if (isThreeTeamMode) {
+        divideThreeTeams();
+    } else {
+        divideTwoTeams();
     }
-
-    // 각 포지션별 선수를 섞기
-    const shuffledGuards = shuffle([...players.guards]);
-    const shuffledForwards = shuffle([...players.forwards]);
-    const shuffledCenters = shuffle([...players.centers]);
-    
-    // A팀과 B팀 초기화
-    let teamA = [];
-    let teamB = [];
-    
-    // 포지션별로 팀 나누기
-    function divideByPosition(players) {
-        const shuffledPlayers = shuffle([...players]);
-        shuffledPlayers.forEach((player, index) => {
-            if (index % 2 === 0) {
-                if (teamA.length < teamASize) {
-                    teamA.push(player);
-                } else {
-                    teamB.push(player);
-                }
-            } else {
-                if (teamB.length < teamBSize) {
-                    teamB.push(player);
-                } else {
-                    teamA.push(player);
-                }
-            }
-        });
-    }
-
-    // 각 포지션별로 나누기
-    divideByPosition(shuffledGuards);
-    divideByPosition(shuffledForwards);
-    divideByPosition(shuffledCenters);
-
-    // 각 팀의 선수 순서 다시 섞기
-    teamA = shuffle(teamA);
-    teamB = shuffle(teamB);
-
-    // HTML 구조 재생성
-    const teamAElement = document.getElementById('teamA');
-    const teamBElement = document.getElementById('teamB');
-
-    // A팀 HTML 구조 생성
-    teamAElement.innerHTML = `
-        <div class="team-header">
-            <h4>A팀 (${teamA.length}명)</h4>
-            <div class="position-counts">
-                <span class="position-count guards">가드: ${teamA.filter(p => players.guards.includes(p)).length}명</span>
-                <span class="position-count forwards">포워드: ${teamA.filter(p => players.forwards.includes(p)).length}명</span>
-                <span class="position-count centers">센터: ${teamA.filter(p => players.centers.includes(p)).length}명</span>
-            </div>
-        </div>
-        <div class="team-content">
-            <div class="team-controls">
-                <button type="button" class="move-up-btn" onclick="movePlayerPosition('up', 'teamA')" disabled>▲</button>
-                <button type="button" class="move-down-btn" onclick="movePlayerPosition('down', 'teamA')" disabled>▼</button>
-            </div>
-            <div class="players-list">
-                ${teamA.map((player, index) => {
-                    let position = '';
-                    if (players.guards.includes(player)) position = '(가드)';
-                    else if (players.forwards.includes(player)) position = '(포워드)';
-                    else if (players.centers.includes(player)) position = '(센터)';
-                    return `<p><span class="player-number">${index + 1}</span>${player} ${position}</p>`;
-                }).join('')}
-            </div>
-        </div>
-    `;
-
-    // B팀 HTML 구조 생성
-    teamBElement.innerHTML = `
-        <div class="team-header">
-            <h4>B팀 (${teamB.length}명)</h4>
-            <div class="position-counts">
-                <span class="position-count guards">가드: ${teamB.filter(p => players.guards.includes(p)).length}명</span>
-                <span class="position-count forwards">포워드: ${teamB.filter(p => players.forwards.includes(p)).length}명</span>
-                <span class="position-count centers">센터: ${teamB.filter(p => players.centers.includes(p)).length}명</span>
-            </div>
-        </div>
-        <div class="team-content">
-            <div class="team-controls">
-                <button type="button" class="move-up-btn" onclick="movePlayerPosition('up', 'teamB')" disabled>▲</button>
-                <button type="button" class="move-down-btn" onclick="movePlayerPosition('down', 'teamB')" disabled>▼</button>
-            </div>
-            <div class="players-list">
-                ${teamB.map((player, index) => {
-                    let position = '';
-                    if (players.guards.includes(player)) position = '(가드)';
-                    else if (players.forwards.includes(player)) position = '(포워드)';
-                    else if (players.centers.includes(player)) position = '(센터)';
-                    return `<p><span class="player-number">${index + 1}</span>${player} ${position}</p>`;
-                }).join('')}
-            </div>
-        </div>
-    `;
-
-    // 선수 클릭 이벤트 다시 추가
-    document.querySelectorAll('#teamA p, #teamB p').forEach(player => {
-        player.addEventListener('click', handlePlayerClick);
-        player.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            handlePlayerClick(e);
-        });
-    });
-
-    // 선택 상태 초기화
-    selectedPlayer = null;
-    updateMoveButton();
-    updateShuffleButtons();
 }
 
 // 팀 표시 함수
@@ -300,7 +226,19 @@ function movePlayer() {
     }
 
     const currentTeam = selectedPlayer.closest('.team');
-    const targetTeamId = currentTeam.id === 'teamA' ? 'teamB' : 'teamA';
+    const currentTeamId = currentTeam.id;
+    const clickedButton = event.target;
+    let targetTeamId;
+
+    // 클릭된 버튼에 따라 목적지 팀 결정
+    if (clickedButton.textContent.includes('A팀으로')) {
+        targetTeamId = 'teamA';
+    } else if (clickedButton.textContent.includes('B팀으로')) {
+        targetTeamId = 'teamB';
+    } else if (clickedButton.textContent.includes('C팀으로')) {
+        targetTeamId = 'teamC';
+    }
+
     const targetTeam = document.getElementById(targetTeamId);
     const targetPlayersList = targetTeam.querySelector('.players-list');
 
@@ -310,7 +248,7 @@ function movePlayer() {
     selectedPlayer.remove();
 
     // 선수 번호 업데이트
-    updatePlayerNumbers(currentTeam.id);
+    updatePlayerNumbers(currentTeamId);
     updatePlayerNumbers(targetTeamId);
 
     // 이벤트 리스너 다시 추가
@@ -321,7 +259,7 @@ function movePlayer() {
     });
 
     // 양쪽 팀 정보 업데이트
-    updateTeamInfo(currentTeam.id);
+    updateTeamInfo(currentTeamId);
     updateTeamInfo(targetTeamId);
 
     // 선택 상태 초기화
@@ -346,7 +284,7 @@ function updateTeamInfo(teamId) {
     };
 
     // 팀 제목과 포지션 카운트 업데이트
-    team.querySelector('h4').textContent = `${teamId === 'teamA' ? 'A' : 'B'}팀 (${players.length}명)`;
+    team.querySelector('h4').textContent = `${teamId === 'teamA' ? 'A' : teamId === 'teamB' ? 'B' : 'C'}팀 (${players.length}명)`;
     team.querySelector('.position-counts').innerHTML = `
         <span class="position-count guards">가드: ${counts.guards}명</span>
         <span class="position-count forwards">포워드: ${counts.forwards}명</span>
@@ -372,7 +310,7 @@ function resetPlayerList() {
     playerList.querySelector('ul').innerHTML = '';
 
     // 팀 초기화
-    ['A', 'B'].forEach(team => {
+    ['A', 'B', 'C'].forEach(team => {
         const teamElement = document.getElementById(`team${team}`);
         teamElement.innerHTML = `
             <h4>${team}팀 (0명)</h4>
@@ -391,20 +329,36 @@ function resetPlayerList() {
 // 이동 버튼 텍스트 업데이트 함수
 function updateMoveButton() {
     const moveBtn = document.getElementById('moveTeam');
-    if (!moveBtn) return; // moveBtn이 없으면 함수 종료
+    const moveBtn2 = document.getElementById('moveTeam2');
+    if (!moveBtn || !moveBtn2) return;
 
     if (!selectedPlayer) {
         moveBtn.textContent = '팀 이동';
         moveBtn.disabled = true;
+        moveBtn2.textContent = '팀 이동';
+        moveBtn2.disabled = true;
     } else {
         const currentTeam = selectedPlayer.closest('.team').id;
-        const targetTeam = currentTeam === 'teamA' ? 'B' : 'A';
-        moveBtn.textContent = `${targetTeam}팀으로 이동`;
-        moveBtn.disabled = false;
+        if (currentTeam === 'teamA') {
+            moveBtn.textContent = 'B팀으로 이동';
+            moveBtn.disabled = false;
+            moveBtn2.textContent = 'C팀으로 이동';
+            moveBtn2.disabled = false;
+        } else if (currentTeam === 'teamB') {
+            moveBtn.textContent = 'A팀으로 이동';
+            moveBtn.disabled = false;
+            moveBtn2.textContent = 'C팀으로 이동';
+            moveBtn2.disabled = false;
+        } else if (currentTeam === 'teamC') {
+            moveBtn.textContent = 'A팀으로 이동';
+            moveBtn.disabled = false;
+            moveBtn2.textContent = 'B팀으로 이동';
+            moveBtn2.disabled = false;
+        }
     }
 }
 
-// 특정 팀 선수 섞기 함수
+// 특정 팀 선수 섞기 함수 수정
 function shuffleTeam(teamId) {
     const teamElement = document.getElementById(teamId);
     if (!teamElement) return;
@@ -415,7 +369,7 @@ function shuffleTeam(teamId) {
     const players = Array.from(playersList.querySelectorAll('p'));
     
     if (players.length === 0) {
-        alert(`섞을 선수가 없습니다.`);
+        alert(`${teamId.replace('team', '')}팀에 섞을 선수가 없습니다.`);
         return;
     }
 
@@ -423,9 +377,7 @@ function shuffleTeam(teamId) {
     const shuffledPlayers = shuffle([...players]);
     
     // 기존 선수 목록 비우기
-    while (playersList.firstChild) {
-        playersList.removeChild(playersList.firstChild);
-    }
+    playersList.innerHTML = '';
 
     // 섞인 선수들 다시 추가
     shuffledPlayers.forEach((player, index) => {
@@ -458,12 +410,15 @@ function shuffleTeam(teamId) {
 function updateShuffleButtons() {
     const teamAPlayers = document.querySelectorAll('#teamA p').length;
     const teamBPlayers = document.querySelectorAll('#teamB p').length;
+    const teamCPlayers = document.querySelectorAll('#teamC p').length;
     
     const shuffleTeamABtn = document.getElementById('shuffleTeamA');
     const shuffleTeamBBtn = document.getElementById('shuffleTeamB');
+    const shuffleTeamCBtn = document.getElementById('shuffleTeamC');
     
     if (shuffleTeamABtn) shuffleTeamABtn.disabled = teamAPlayers < 2;
     if (shuffleTeamBBtn) shuffleTeamBBtn.disabled = teamBPlayers < 2;
+    if (shuffleTeamCBtn) shuffleTeamCBtn.disabled = teamCPlayers < 2;
 }
 
 // 위/아래 이동 버튼 상태 업데이트 함수 수정
@@ -475,7 +430,7 @@ function updateMoveButtons(teamId) {
     const downButton = teamElement.querySelector('.move-down-btn');
     if (!upButton || !downButton) return;
 
-    const selectedPlayer = teamElement.querySelector('.selected-player-A, .selected-player-B');
+    const selectedPlayer = teamElement.querySelector('.selected-player-A, .selected-player-B, .selected-player-C');
     if (!selectedPlayer) {
         upButton.disabled = true;
         downButton.disabled = true;
@@ -498,7 +453,7 @@ window.movePlayerPosition = function(direction, teamId) {
     const playersList = teamElement.querySelector('.players-list');
     if (!playersList) return;
 
-    const selectedPlayer = teamElement.querySelector('.selected-player-A, .selected-player-B');
+    const selectedPlayer = teamElement.querySelector('.selected-player-A, .selected-player-B, .selected-player-C');
     if (!selectedPlayer) return;
 
     const allPlayers = Array.from(playersList.querySelectorAll('p'));
@@ -535,6 +490,188 @@ function updatePlayerNumbers(teamId) {
     });
 }
 
+// 2팀으로 나누기 함수
+function divideTwoTeams() {
+    // C팀 숨기기
+    document.getElementById('teamC').style.display = 'none';
+    document.getElementById('moveButtons2').style.display = 'none';
+    
+    // 전체 선수 수 확인
+    const totalPlayers = players.guards.length + players.forwards.length + players.centers.length;
+    
+    if (totalPlayers === 0) {
+        alert('나눌 선수가 없습니다.');
+        return;
+    }
+
+    // 인원수 차이 체크
+    const teamASize = Math.ceil(totalPlayers / 2);
+    const teamBSize = totalPlayers - teamASize;
+    
+    if (Math.abs(teamASize - teamBSize) > 1) {
+        alert('팀 간의 인원수 차이가 2명 이상이 되지 않도록 선수를 추가해주세요.');
+        return;
+    }
+
+    // 각 포지션별 선수를 섞기
+    const shuffledGuards = shuffle([...players.guards]);
+    const shuffledForwards = shuffle([...players.forwards]);
+    const shuffledCenters = shuffle([...players.centers]);
+    
+    // A팀과 B팀 초기화
+    let teamA = [];
+    let teamB = [];
+    
+    // 포지션별로 팀 나누기
+    function divideByPosition(players) {
+        const shuffledPlayers = shuffle([...players]);
+        shuffledPlayers.forEach((player, index) => {
+            if (index % 2 === 0) {
+                if (teamA.length < teamASize) {
+                    teamA.push(player);
+                } else {
+                    teamB.push(player);
+                }
+            } else {
+                if (teamB.length < teamBSize) {
+                    teamB.push(player);
+                } else {
+                    teamA.push(player);
+                }
+            }
+        });
+    }
+
+    // 각 포지션별로 나누기
+    divideByPosition(shuffledGuards);
+    divideByPosition(shuffledForwards);
+    divideByPosition(shuffledCenters);
+
+    // 각 팀의 선수 순서 다시 섞기
+    teamA = shuffle(teamA);
+    teamB = shuffle(teamB);
+
+    // HTML 구조 업데이트
+    updateTeamDisplay('teamA', teamA);
+    updateTeamDisplay('teamB', teamB);
+}
+
+// 3팀으로 나누기 함수
+function divideThreeTeams() {
+    // C팀과 이동 버튼 표시
+    document.getElementById('teamC').style.display = 'block';
+    document.getElementById('moveButtons2').style.display = 'flex';
+    
+    // 전체 선수 수 확인
+    const totalPlayers = players.guards.length + players.forwards.length + players.centers.length;
+    
+    if (totalPlayers === 0) {
+        alert('나눌 선수가 없습니다.');
+        return;
+    }
+
+    // 각 팀의 인원수 계산
+    const baseSize = Math.floor(totalPlayers / 3);
+    const remainder = totalPlayers % 3;
+    
+    const teamSizes = [
+        baseSize + (remainder > 0 ? 1 : 0),
+        baseSize + (remainder > 1 ? 1 : 0),
+        baseSize
+    ];
+
+    // 각 포지션별 선수를 섞기
+    const shuffledGuards = shuffle([...players.guards]);
+    const shuffledForwards = shuffle([...players.forwards]);
+    const shuffledCenters = shuffle([...players.centers]);
+    
+    // 팀 초기화
+    let teamA = [];
+    let teamB = [];
+    let teamC = [];
+    
+    // 포지션별로 팀 나누기
+    function divideByPosition(players) {
+        const shuffledPlayers = shuffle([...players]);
+        shuffledPlayers.forEach((player, index) => {
+            const teamIndex = index % 3;
+            if (teamIndex === 0 && teamA.length < teamSizes[0]) {
+                teamA.push(player);
+            } else if (teamIndex === 1 && teamB.length < teamSizes[1]) {
+                teamB.push(player);
+            } else if (teamIndex === 2 && teamC.length < teamSizes[2]) {
+                teamC.push(player);
+            } else {
+                // 남은 자리가 있는 팀에 배정
+                if (teamA.length < teamSizes[0]) teamA.push(player);
+                else if (teamB.length < teamSizes[1]) teamB.push(player);
+                else if (teamC.length < teamSizes[2]) teamC.push(player);
+            }
+        });
+    }
+
+    // 각 포지션별로 나누기
+    divideByPosition(shuffledGuards);
+    divideByPosition(shuffledForwards);
+    divideByPosition(shuffledCenters);
+
+    // 각 팀의 선수 순서 다시 섞기
+    teamA = shuffle(teamA);
+    teamB = shuffle(teamB);
+    teamC = shuffle(teamC);
+
+    // HTML 구조 업데이트
+    updateTeamDisplay('teamA', teamA);
+    updateTeamDisplay('teamB', teamB);
+    updateTeamDisplay('teamC', teamC);
+}
+
+// 팀 표시 업데이트 함수
+function updateTeamDisplay(teamId, teamPlayers) {
+    const teamElement = document.getElementById(teamId);
+    const positionCounts = {
+        guards: teamPlayers.filter(p => players.guards.includes(p)).length,
+        forwards: teamPlayers.filter(p => players.forwards.includes(p)).length,
+        centers: teamPlayers.filter(p => players.centers.includes(p)).length
+    };
+
+    teamElement.innerHTML = `
+        <div class="team-header">
+            <h4>${teamId.replace('team', '')}팀 (${teamPlayers.length}명)</h4>
+            <div class="position-counts">
+                <span class="position-count guards">가드: ${positionCounts.guards}명</span>
+                <span class="position-count forwards">포워드: ${positionCounts.forwards}명</span>
+                <span class="position-count centers">센터: ${positionCounts.centers}명</span>
+            </div>
+        </div>
+        <div class="team-content">
+            <div class="team-controls">
+                <button class="move-up-btn" onclick="movePlayerPosition('up', '${teamId}')" disabled>▲</button>
+                <button class="move-down-btn" onclick="movePlayerPosition('down', '${teamId}')" disabled>▼</button>
+            </div>
+            <div class="players-list">
+                ${teamPlayers.map((player, index) => {
+                    let position = '';
+                    if (players.guards.includes(player)) position = '(가드)';
+                    else if (players.forwards.includes(player)) position = '(포워드)';
+                    else if (players.centers.includes(player)) position = '(센터)';
+                    return `<p><span class="player-number">${index + 1}</span>${player} ${position}</p>`;
+                }).join('')}
+            </div>
+        </div>
+    `;
+
+    // 선수들에게 클릭 이벤트 추가
+    const newPlayers = teamElement.querySelectorAll('.players-list p');
+    newPlayers.forEach(player => {
+        player.addEventListener('click', handlePlayerClick);
+        player.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handlePlayerClick(e);
+        });
+    });
+}
+
 // DOMContentLoaded 이벤트 리스너 수정
 document.addEventListener('DOMContentLoaded', function() {
     // 모든 버튼 이벤트 리스너를 안전하게 추가
@@ -559,6 +696,11 @@ document.addEventListener('DOMContentLoaded', function() {
         resetBtn.addEventListener('click', resetPlayerList);
     }
 
+    const toggleTeamModeBtn = document.getElementById('toggleTeamMode');
+    if (toggleTeamModeBtn) {
+        toggleTeamModeBtn.addEventListener('click', toggleTeamMode);
+    }
+
     const shuffleTeamABtn = document.getElementById('shuffleTeamA');
     if (shuffleTeamABtn) {
         shuffleTeamABtn.addEventListener('click', function() {
@@ -577,6 +719,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 shuffleTeam('teamB');
             }
         });
+    }
+
+    const shuffleTeamCBtn = document.getElementById('shuffleTeamC');
+    if (shuffleTeamCBtn) {
+        shuffleTeamCBtn.addEventListener('click', function() {
+            const confirmShuffle = confirm('C팀의 선수 순서를 섞으시겠습니까?');
+            if (confirmShuffle) {
+                shuffleTeam('teamC');
+            }
+        });
+    }
+
+    const moveTeam2Btn = document.getElementById('moveTeam2');
+    if (moveTeam2Btn) {
+        moveTeam2Btn.addEventListener('click', movePlayer);
     }
 
     // 입력 필드에 엔터키 이벤트 리스너 추가
